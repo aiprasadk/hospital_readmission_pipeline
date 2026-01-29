@@ -21,15 +21,22 @@ The solution is governed by **Unity Catalog** and processed using **Databricks S
 
 
 ### 1. The Medallion Data Pipeline
+* The solution leverages a managed Medallion architecture within Unity Catalog to ensure data lineage and governance.
+
+<img width="1858" height="917" alt="Screenshot 2026-01-29 113141" src="https://github.com/user-attachments/assets/097ed0f2-c33c-438a-bf3e-a79b838095d5" />
+
 * **🥉 Bronze (Raw):** Automated ingestion of patient encounters and ICD-9 clinical code mappings into Delta format.
 * **🥈 Silver (Cleaned):** Implementation of schema enforcement and clinical validation. Specifically, the pipeline filters out deceased or hospice patients to ensure the model focuses only on actionable readmission cases.
 * **🥇 Gold (Curated):** Advanced feature engineering where complex ICD-9 codes are mapped into 9 high-level clinical categories (e.g., Circulatory, Respiratory, Diabetes) to reduce feature sparsity.
+
 
 ### 2. Machine Learning & MLOps Lifecycle
 * **Algorithm:** Random Forest Classifier optimized for high-dimensional clinical data.
 * **Feature Pipeline:** Integrated `StringIndexer` for categorical encoding (Race, Gender, Age) and `VectorAssembler` for unified feature vectorization.
 * **MLflow Integration:** Full experiment tracking, logging of **AUC (0.537)**, and model versioning directly within Unity Catalog Volumes.
 * **Post-Processing:** Leveraged `vector_to_array` to convert Spark ML probability vectors into human-readable risk percentages for dashboarding.
+  
+<img width="1875" height="912" alt="Screenshot 2026-01-29 114326" src="https://github.com/user-attachments/assets/912fd3fa-8238-4478-a6f2-c6d0206f5b8a" />
 
 ---
 
@@ -43,6 +50,8 @@ The Gold-layer predictions feed an interactive **Databricks SQL Dashboard**:
 | **📈 Risk Drivers** | Scatter plots identify a strong correlation between **Length of Stay** and readmission risk, peaking for stays between 8–14 days. |
 
 
+<img width="1870" height="914" alt="Screenshot 2026-01-29 113506" src="https://github.com/user-attachments/assets/7e7d3b48-262b-4bfe-a0cb-d99a10439866" />
+<img width="1872" height="916" alt="Screenshot 2026-01-29 113718" src="https://github.com/user-attachments/assets/99e84f8b-c21f-4e3c-9188-c136e71ab4ca" />
 
 ---
 
